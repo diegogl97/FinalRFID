@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">CanchasTec</string>
+    <string name="title_home">Agregar</string>
+    <string name="title_dashboard">Lista</string>
+    <string name="title_notifications">Recarga</string>
+</resources>
