@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "185233319860",
+    "firebase_url": "https://canchastec.firebaseio.com",
+    "project_id": "canchastec",
+    "storage_bucket": "canchastec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:185233319860:android:34dd40c53bc6640d69f4e1",
+        "android_client_info": {
+          "package_name": "com.example.finalrfid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "185233319860-mdbpvha5k4mi4q7es6c7dcjao7bvpsd8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.finalrfid",
+            "certificate_hash": "16b904f74a117275cc28c6cc7483cf47a5d8ee64"
+          }
+        },
+        {
+          "client_id": "185233319860-jktkl8k4cemhjq64fs649icvdm2ds77g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfVoBL6E7_KmKinHjQCuB0g7EhjXmbauk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "185233319860-jktkl8k4cemhjq64fs649icvdm2ds77g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
