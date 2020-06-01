@@ -36,13 +36,14 @@ public class ApartadoRecyclerApater extends RecyclerView.Adapter<ApartadoRecycle
         holder.matriculaTextView.setText(apartado.getMatricula());
         holder.canchaTextView.setText(apartado.getCancha());
         holder.horaTextView.setText(apartado.getHoras());
-        holder.tiempoTextView.setText(apartado.getHorasPagadas());
+        holder.tiempoTextView.setText(Integer.toString(apartado.getHorasPagadas()));
     }
 
     @Override
     public int getItemCount() {
         return list.size();
     }
+
     public class ItemViewHolder extends RecyclerView.ViewHolder {
 
         public View view;
@@ -54,8 +55,8 @@ public class ApartadoRecyclerApater extends RecyclerView.Adapter<ApartadoRecycle
 
 
 
-        public ItemViewHolder(@NonNull View itemView) {
-            super(itemView);
+        public ItemViewHolder(@NonNull View view) {
+            super(view);
             this.view = view;
             this.nombreTextView = (TextView) view.findViewById(R.id.nombre_alumno);
             this.matriculaTextView = (TextView) view.findViewById(R.id.matricula_alumno);

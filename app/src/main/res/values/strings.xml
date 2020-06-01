@@ -33,4 +33,8 @@ back button to return to this app.</string>
     <string name="select_block_label">" Introducir Bloque (0-63): "</string>
     <string name="leer_bloque_button">Checar</string>
     <string name="escribir_bloque_button">Cargar</string>
+    <string name="ready_to_authenticate">Listo para autentificar un sector del tag MIFARE!</string>
+    <string name="ready_to_authenticate_instructions">Acerque su dispositivo Android a un tag MIFARE para autentificar el sector seleccionado con la llave seleccionada.</string>
+    <string name="ready_to_read">Listo para leer un bloque del tag Mifare!</string>
+    <string name="ready_to_read_instructions">Acerque su dispositivo Android a un tag MIFARE para leer la información del Bloque seleccionado.</string>
 </resources>

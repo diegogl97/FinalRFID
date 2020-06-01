@@ -549,8 +549,6 @@ public class MainActivity extends AppCompatActivity
           - Checar si tiene saldo suficiente
           - Realizar el pago (descontar saldo del tag), en caso de no tener saldo suficiente solicitar recarga
 
-          - Ventana Lista
-          - Ventana Recarga
         */
         CanchaFirebase x = new CanchaFirebase();
         EditText nombreVato = findViewById(R.id.computer_name);
