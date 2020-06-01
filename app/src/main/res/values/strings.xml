@@ -3,4 +3,34 @@
     <string name="title_home">Agregar</string>
     <string name="title_dashboard">Lista</string>
     <string name="title_notifications">Recarga</string>
+
+    <string name="computer_name_label">Nombre:</string>
+    <string name="computer_ram_label">Matrícula:</string>
+    <string name="introduce_computer_name">Introduce Nombre</string>
+    <string name="introduce_computer_ram">Introduce Matrícula</string>
+    <string name="write_to_tag_button_label">Registrar alumno</string>
+    <string name="new_tag_found">New inventory tag found!</string>
+    <string name="replace_current_tag">Read tag and replace currently displayed tag information in the textfields?</string>
+    <string name="ready_to_write">Ready to write to NFC tag!</string>
+    <string name="ready_to_write_instructions">Touch your device to a computer\'s tag to update its inventory.</string>
+    <string name="warning_nfc_is_off">NFC is currently turned off!</string>
+    <string name="turn_on_nfc">NFC Inventory can\'t be used without NFC enabled. Please turn on NFC in the Settings and then use the
+back button to return to this app.</string>
+
+    <string name="instrucciones"> Acercar un tag MIFARE al dispositivo Android para leer su UID y su tipo.</string>
+    <string name="infotag_label">  INFO DEL TAG:</string>
+    <string name="tag_UID">" UID del Tag: "</string>
+    <string name="card_type">" Tipo de Tarjeta: "</string>
+    <string name="autenticate_label">  Recarga</string>
+    <string name="keyA_label">" Key A (12 Hex): "</string>
+    <string name="keyB_label">" Key B (12 Hex): "</string>
+    <string name="sectorauth_label">" Sector a autentificar (0-15): "</string>
+    <string name="sel_llave_label">" Seleccionar Llave: "</string>
+    <string name="keyA">Key A</string>
+    <string name="keyB">Key B</string>
+    <string name="authenticatebutton">Autentificar Sector</string>
+    <string name="read_write_label">  Checar/Cargar saldo:</string>
+    <string name="select_block_label">" Introducir Bloque (0-63): "</string>
+    <string name="leer_bloque_button">Checar</string>
+    <string name="escribir_bloque_button">Cargar</string>
 </resources>

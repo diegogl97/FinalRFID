@@ -41,9 +41,9 @@ public class CanchaFirebase {
 
     }
 
-    public void cargaDato() {
+    public void cargaDato(String nombre, String matricula, String cancha, String horas, int horasPagadas) {
         String key = mDatabase.child("Apartado").push().getKey();
-        Apartado entrada = new Apartado(key,"Diego","Fútbol",1);
+        Apartado entrada = new Apartado(key,nombre,matricula,cancha,horas,horasPagadas);
         mDatabase.child("Apartado").child(key).setValue(entrada);
     }
 }
