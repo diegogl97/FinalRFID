@@ -168,7 +168,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/textView11"
-        app:layout_constraintTop_toBottomOf="@+id/textView15"
+        app:layout_constraintTop_toBottomOf="@+id/pagoHorasP"
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
@@ -199,7 +199,7 @@
         app:layout_constraintVertical_bias="0.265" />
 
     <TextView
-        android:id="@+id/textView15"
+        android:id="@+id/pagoHorasP"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

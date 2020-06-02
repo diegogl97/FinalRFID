@@ -321,8 +321,6 @@ public class MainActivity extends AppCompatActivity
             inventory = new JSONObject(jsonString);
             name = inventory.getString("nombre");
             ram = inventory.getString("matricula");
-            processor = inventory.getString("carrera");
-            mail = inventory.getString("mail");
         } catch (JSONException e)
         {
             Log.e(TAG, "Couldn't parse JSON: ", e);
@@ -573,7 +571,7 @@ public class MainActivity extends AppCompatActivity
         matriculaP = fMatricula;
         canchaP = fCancha;
         horaIP = fHoraI;
-        horasP= quantity;
+        horasP= quantity - 1 ;
         /*CanchaFirebase x = new CanchaFirebase();
         x.cargaDato(fName,fMatricula,fCancha, fHoraI,quantity);
         Toast.makeText(this, "Registro completo", Toast.LENGTH_LONG).show();*/

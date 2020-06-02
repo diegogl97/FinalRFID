@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.finalrfid.firebase.CanchaFirebase;
@@ -33,9 +34,10 @@ public class PagoActivity extends AppCompatActivity {
     IntentFilter[] mReadWriteTagFilters;
     private boolean mWriteMode = false;
     private boolean mAuthenticationMode = false;
-    private boolean ReadUIDMode = true;
+    private boolean ReadUIDMode = false;
     String[][]mTechList;
 
+    private boolean tagRead = false;
     // UI elements
     EditText mTagUID;
     EditText mCardType;
@@ -55,6 +57,27 @@ public class PagoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pago);
 
+        mHexKeyA = ((EditText) findViewById(R.id.editTextKeyA));
+        mHexKeyB = ((EditText) findViewById(R.id.editTextKeyB));
+        mDataBloque = ((EditText) findViewById(R.id.editTextBloqueLeido));
+        mDatatoWrite = ((EditText) findViewById(R.id.editTextBloqueAEscribir));
+        mRadioGroup = ((RadioGroup) findViewById(R.id.rBtnGrp));
+
+        TextView n = (TextView) findViewById(R.id.pagoNom);
+        TextView m = (TextView) findViewById(R.id.pagoMat);
+        TextView hi = (TextView) findViewById(R.id.pagoHora);
+        TextView c = (TextView) findViewById(R.id.pagoCancha);
+        TextView hp = (TextView) findViewById(R.id.pagoHorasP);
+        TextView t = (TextView) findViewById(R.id.pagoTotal);
+        n.setText(MainActivity.nombreP);
+        m.setText(MainActivity.matriculaP);
+        hi.setText(MainActivity.horaIP);
+        c.setText(MainActivity.canchaP);
+        hp.setText(Integer.toString(MainActivity.horasP));
+        t.setText("$" + Integer.toString(MainActivity.total));
+
+
+        findViewById(R.id.pagar_button).setOnClickListener(mTagRead);
         // get an instance of the context's cached NfcAdapter
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
@@ -96,17 +119,7 @@ public class PagoActivity extends AppCompatActivity {
         // Setup a tech list for all NFC tags
         mTechList = new String[][] { new String[] { MifareClassic.class.getName() } };
 
-        Button pay = findViewById(R.id.pagar_button);
-        pay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                CanchaFirebase x = new CanchaFirebase();
-                x.cargaDato(MainActivity.nombreP,MainActivity.matriculaP,MainActivity.canchaP, MainActivity.horaIP,MainActivity.horasP);
-                Toast.makeText(getApplicationContext(), "Registro completo", Toast.LENGTH_LONG).show();
-                finish();
-            }
-        });
+        resolveReadIntent(getIntent());
 
         Button back = findViewById(R.id.volver_button);
         back.setOnClickListener(new View.OnClickListener() {
@@ -115,9 +128,6 @@ public class PagoActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        resolveReadIntent(getIntent());
-
     }
 
     void resolveReadIntent(Intent intent) {
@@ -126,38 +136,18 @@ public class PagoActivity extends AppCompatActivity {
             Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             MifareClassic mfc = MifareClassic.get(tagFromIntent);
 
-            if (ReadUIDMode)
-            {
 
-            } else
-            {
                 try {
                     mfc.connect();
                     boolean auth = true;
                     String hexkey = "";
-                    int id = mRadioGroup.getCheckedRadioButtonId();
 
                     int sector = 7;
                     byte[] datakey;
 
-                    if (id == R.id.radioButtonkeyA){
-                        hexkey = mHexKeyA.getText().toString();
-                        datakey = hexStringToByteArray(hexkey);
-                        auth = mfc.authenticateSectorWithKeyA(sector, datakey);
-                    }
-                    else if (id == R.id.radioButtonkeyB){
-                        hexkey = mHexKeyB.getText().toString();
-                        datakey = hexStringToByteArray(hexkey);
-                        auth = mfc.authenticateSectorWithKeyB(sector, datakey);
-                    }
-                    else {
-                        //no item selected poner toast
-                        Toast.makeText(this,
-                                "°Seleccionar llave A o B!",
-                                Toast.LENGTH_LONG).show();
-                        mfc.close();
-                        return;
-                    }
+                    hexkey = "ffffffffffff";
+                    datakey = hexStringToByteArray(hexkey);
+                    auth = mfc.authenticateSectorWithKeyB(sector, datakey);
 
                     if(auth){
                         int bloque = 29;
@@ -170,18 +160,8 @@ public class PagoActivity extends AppCompatActivity {
                         blockread = HexToDecimal(blockread);
                         saldo = Integer.parseInt(blockread);
 
-                        Editable BlockField = mDataBloque.getText();
-                        BlockField.clear();
-                        BlockField.append(blockread);
-
-                        Toast.makeText(this,
-                                "Lectura de bloque EXITOSA.",
-                                Toast.LENGTH_LONG).show();
-
 
                     }else{ // Authentication failed - Handle it
-                        Editable BlockField = mDataBloque.getText();
-                        BlockField.clear();
                         Toast.makeText(this,
                                 "Lectura de bloque FALLIDA dado autentificación fallida.",
                                 Toast.LENGTH_LONG).show();
@@ -193,14 +173,26 @@ public class PagoActivity extends AppCompatActivity {
                 }catch (IOException e) {
                     Log.e(TAG, e.getLocalizedMessage());
                 }
+            if (saldo < MainActivity.total){
+                Toast.makeText(getApplicationContext(), "Saldo insuficiente, realiza una recarga", Toast.LENGTH_LONG).show();
             }
+            else{
+                resolveWriteIntent(intent);
+                resolveWriteIntent(getIntent());
+
+                CanchaFirebase x = new CanchaFirebase();
+                x.cargaDato(MainActivity.nombreP,MainActivity.matriculaP,MainActivity.canchaP, MainActivity.horaIP,MainActivity.horasP);
+                Toast.makeText(getApplicationContext(), "Registro completo", Toast.LENGTH_LONG).show();
+                finish();
+            }
+
 
         }
     }
 
 
     void resolveWriteIntent(Intent intent) {
-        resolveReadIntent(getIntent());
+
 
         String action = intent.getAction();
         if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
@@ -211,45 +203,26 @@ public class PagoActivity extends AppCompatActivity {
                 mfc.connect();
                 boolean auth = false;
                 String hexkey = "";
-                int id = mRadioGroup.getCheckedRadioButtonId();
                 int bloque = 29;
                 int sector = 7;
                 byte[] datakey;
 
-                if (id == R.id.radioButtonkeyA){
-                    hexkey = mHexKeyA.getText().toString();
-                    datakey = hexStringToByteArray(hexkey);
-                    auth = mfc.authenticateSectorWithKeyA(sector, datakey);
-                }
-                else if (id == R.id.radioButtonkeyB){
-                    hexkey = mHexKeyB.getText().toString();
-                    datakey = hexStringToByteArray(hexkey);
-                    auth = mfc.authenticateSectorWithKeyB(sector, datakey);
-                }
-                else {
-                    //no item selected poner toast
-                    Toast.makeText(this,
-                            "°Seleccionar llave A o B!",
-                            Toast.LENGTH_LONG).show();
-                    mfc.close();
-                    return;
-                }
+
+                hexkey = "ffffffffffff";
+                datakey = hexStringToByteArray(hexkey);
+                auth = mfc.authenticateSectorWithKeyB(sector, datakey);
 
                 if(auth){
-                    String strdata = mDatatoWrite.getText().toString();
+                    String strdata = Integer.toString(MainActivity.total);
                     // HACER DECIMAL A HEXADECIMAL
                     int hex = Integer.parseInt(strdata);
-                    saldo = saldo + hex;
+                    saldo = saldo - hex;
                     strdata = Integer.toHexString(saldo);
                     String x = HexFill(strdata);
                     strdata = x;
 
                     byte[] datatowrite = hexStringToByteArray(strdata);
                     mfc.writeBlock(bloque, datatowrite);
-
-                    Toast.makeText(this,
-                            "Escritura a bloque EXITOSA.",
-                            Toast.LENGTH_LONG).show();
 
 
                 }else{ // Authentication failed - Handle it
@@ -384,8 +357,8 @@ public class PagoActivity extends AppCompatActivity {
     private void enableTagReadMode()
     {
         mWriteMode = false;
-        mNfcAdapter.enableForegroundDispatch(this, mNfcPendingIntent,
-                mReadWriteTagFilters, mTechList);
+        /*mNfcAdapter.enableForegroundDispatch(this, mNfcPendingIntent,
+                mReadWriteTagFilters, mTechList);*/
     }
 
     private void enableTagAuthMode()
@@ -445,7 +418,7 @@ public class PagoActivity extends AppCompatActivity {
         public void onClick(View arg0)
         {
 
-            enableTagReadMode();
+
             ReadUIDMode = false;
 
             AlertDialog.Builder builder = new AlertDialog.Builder(

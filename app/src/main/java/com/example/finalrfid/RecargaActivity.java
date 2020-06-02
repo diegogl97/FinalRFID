@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -59,6 +60,8 @@ public class RecargaActivity extends AppCompatActivity {
         mDataBloque = ((EditText) findViewById(R.id.editTextBloqueLeido));
         mDatatoWrite = ((EditText) findViewById(R.id.editTextBloqueAEscribir));
         mRadioGroup = ((RadioGroup) findViewById(R.id.rBtnGrp));
+
+
 
         findViewById(R.id.buttonLeerbloque).setOnClickListener(mTagRead);
         findViewById(R.id.buttonEscribirBloque).setOnClickListener(mTagWrite);
@@ -122,38 +125,6 @@ public class RecargaActivity extends AppCompatActivity {
 
             if (ReadUIDMode)
             {
-                String tipotag = "";
-                String tamano = "";
-                byte[] tagUID = tagFromIntent.getId();
-                String hexUID = getHexString(tagUID, tagUID.length);
-                Log.i(TAG, "Tag UID: " + hexUID);
-
-                Editable UIDField = mTagUID.getText();
-                UIDField.clear();
-                UIDField.append(hexUID);
-
-                switch(mfc.getType())
-                {
-                    case 0: tipotag = "Mifare Classic"; break;
-                    case 1: tipotag = "Mifare Plus"; break;
-                    case 2: tipotag = "Mifare Pro"; break;
-                    default: tipotag = "Mifare Desconocido"; break;
-                }
-
-                switch(mfc.getSize())
-                {
-                    case 1024: tamano = " (1K Bytes)"; break;
-                    case 2048: tamano = " (2K Bytes)"; break;
-                    case 4096: tamano = " (4K Bytes)"; break;
-                    case 320: tamano = " (MINI - 320 Bytes)"; break;
-                    default: tamano = " (Tamaño desconocido)"; break;
-                }
-
-                Log.i(TAG, "Card Type: " + tipotag + tamano);
-
-                Editable CardtypeField = mCardType.getText();
-                CardtypeField.clear();
-                CardtypeField.append(tipotag + tamano);
 
             } else
             {
@@ -376,7 +347,7 @@ public class RecargaActivity extends AppCompatActivity {
         {
             // Currently in tag AUTHENTICATION mode
             resolveAuthIntent(intent);
-            mTagDialog.cancel();
+            //mTagDialog.cancel();
         }
         else if (!mWriteMode)
         {
