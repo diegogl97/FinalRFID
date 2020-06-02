@@ -19,10 +19,12 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.finalrfid.firebase.CanchaFirebase;
+
 import java.io.IOException;
 import java.util.Locale;
 
-public class RecargaActivity extends AppCompatActivity {
+public class PagoActivity extends AppCompatActivity {
     private static final String TAG = "nfcinventory_simple";
 
     // NFC-related variables
@@ -40,7 +42,6 @@ public class RecargaActivity extends AppCompatActivity {
     EditText mHexKeyA;
     EditText mHexKeyB;
     EditText mSector;
-    EditText mBloque;
     EditText mDataBloque;
     EditText mDatatoWrite;
     AlertDialog mTagDialog;
@@ -52,16 +53,7 @@ public class RecargaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recarga);
-
-        mHexKeyA = ((EditText) findViewById(R.id.editTextKeyA));
-        mHexKeyB = ((EditText) findViewById(R.id.editTextKeyB));
-        mDataBloque = ((EditText) findViewById(R.id.editTextBloqueLeido));
-        mDatatoWrite = ((EditText) findViewById(R.id.editTextBloqueAEscribir));
-        mRadioGroup = ((RadioGroup) findViewById(R.id.rBtnGrp));
-
-        findViewById(R.id.buttonLeerbloque).setOnClickListener(mTagRead);
-        findViewById(R.id.buttonEscribirBloque).setOnClickListener(mTagWrite);
+        setContentView(R.layout.activity_pago);
 
         // get an instance of the context's cached NfcAdapter
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -104,14 +96,28 @@ public class RecargaActivity extends AppCompatActivity {
         // Setup a tech list for all NFC tags
         mTechList = new String[][] { new String[] { MifareClassic.class.getName() } };
 
-        resolveReadIntent(getIntent());
-        Button back = findViewById(R.id.buttonRegresar);
+        Button pay = findViewById(R.id.pagar_button);
+        pay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                CanchaFirebase x = new CanchaFirebase();
+                x.cargaDato(MainActivity.nombreP,MainActivity.matriculaP,MainActivity.canchaP, MainActivity.horaIP,MainActivity.horasP);
+                Toast.makeText(getApplicationContext(), "Registro completo", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
+
+        Button back = findViewById(R.id.volver_button);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+
+        resolveReadIntent(getIntent());
+
     }
 
     void resolveReadIntent(Intent intent) {
@@ -122,38 +128,6 @@ public class RecargaActivity extends AppCompatActivity {
 
             if (ReadUIDMode)
             {
-                String tipotag = "";
-                String tamano = "";
-                byte[] tagUID = tagFromIntent.getId();
-                String hexUID = getHexString(tagUID, tagUID.length);
-                Log.i(TAG, "Tag UID: " + hexUID);
-
-                Editable UIDField = mTagUID.getText();
-                UIDField.clear();
-                UIDField.append(hexUID);
-
-                switch(mfc.getType())
-                {
-                    case 0: tipotag = "Mifare Classic"; break;
-                    case 1: tipotag = "Mifare Plus"; break;
-                    case 2: tipotag = "Mifare Pro"; break;
-                    default: tipotag = "Mifare Desconocido"; break;
-                }
-
-                switch(mfc.getSize())
-                {
-                    case 1024: tamano = " (1K Bytes)"; break;
-                    case 2048: tamano = " (2K Bytes)"; break;
-                    case 4096: tamano = " (4K Bytes)"; break;
-                    case 320: tamano = " (MINI - 320 Bytes)"; break;
-                    default: tamano = " (Tamaño desconocido)"; break;
-                }
-
-                Log.i(TAG, "Card Type: " + tipotag + tamano);
-
-                Editable CardtypeField = mCardType.getText();
-                CardtypeField.clear();
-                CardtypeField.append(tipotag + tamano);
 
             } else
             {
@@ -222,7 +196,6 @@ public class RecargaActivity extends AppCompatActivity {
             }
 
         }
-
     }
 
 
@@ -435,7 +408,7 @@ public class RecargaActivity extends AppCompatActivity {
             enableTagAuthMode();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(
-                    RecargaActivity.this)
+                    PagoActivity.this)
                     .setTitle(getString(R.string.ready_to_authenticate))
                     .setMessage(getString(R.string.ready_to_authenticate_instructions))
                     .setCancelable(true)
@@ -476,7 +449,7 @@ public class RecargaActivity extends AppCompatActivity {
             ReadUIDMode = false;
 
             AlertDialog.Builder builder = new AlertDialog.Builder(
-                    RecargaActivity.this)
+                    PagoActivity.this)
                     .setTitle(getString(R.string.ready_to_read))
                     .setMessage(getString(R.string.ready_to_read_instructions))
                     .setCancelable(true)
@@ -517,7 +490,7 @@ public class RecargaActivity extends AppCompatActivity {
             enableTagWriteMode();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(
-                    RecargaActivity.this)
+                    PagoActivity.this)
                     .setTitle(getString(R.string.ready_to_write))
                     .setMessage(getString(R.string.ready_to_write_instructions))
                     .setCancelable(true)
@@ -554,7 +527,7 @@ public class RecargaActivity extends AppCompatActivity {
         Boolean nfcEnabled = mNfcAdapter.isEnabled();
         if (!nfcEnabled)
         {
-            new AlertDialog.Builder(RecargaActivity.this)
+            new AlertDialog.Builder(PagoActivity.this)
                     .setTitle(getString(R.string.warning_nfc_is_off))
                     .setMessage(getString(R.string.turn_on_nfc))
                     .setCancelable(false)
@@ -613,5 +586,4 @@ public class RecargaActivity extends AppCompatActivity {
         resultado = String.valueOf(data);
         return resultado;
     }
-
 }

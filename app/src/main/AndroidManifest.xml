@@ -16,7 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".RecargaActivity"></activity>
+        <activity android:name=".PagoActivity"/>
         <activity android:name=".ListaActivity" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">

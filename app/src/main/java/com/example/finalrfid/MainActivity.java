@@ -43,8 +43,6 @@ import java.nio.charset.Charset;
 
 
 import java.util.Locale;
-/*CanchaFirebase x = new CanchaFirebase();
-        x.cargaDato();*/
 
 public class MainActivity extends AppCompatActivity
 {
@@ -68,8 +66,13 @@ public class MainActivity extends AppCompatActivity
     private TextView textProductPrice;
     private TextView textProductQuantityCounter;
 
-    //private Product product;
-
+    //Variables publicas para llamar en pago
+    public static String nombreP;
+    public static String matriculaP;
+    public static String horaIP;
+    public static String canchaP;
+    public static int horasP = 0;
+    public static int total;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -157,7 +160,7 @@ public class MainActivity extends AppCompatActivity
         buttonAddToCart.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                addProductToCart();
+                addProductToCart(v);
             }
         });
 
@@ -531,6 +534,7 @@ public class MainActivity extends AppCompatActivity
         int quantity = Integer.parseInt(textProductQuantityCounter.getText().toString()) - 1;
         if (quantity > 0) {
             double newPrice = quantity * 60;
+            total = (int)newPrice;
             textProductQuantityCounter.setText(String.valueOf(quantity));
             textProductPrice.setText(String.format("$%.2f", newPrice));
         }
@@ -539,18 +543,21 @@ public class MainActivity extends AppCompatActivity
     private void addProductPrice(){
         int quantity = Integer.parseInt(textProductQuantityCounter.getText().toString()) + 1;
         double newPrice = quantity * 60;
+        total = (int)newPrice;
         textProductQuantityCounter.setText(String.valueOf(quantity));
         textProductPrice.setText(String.format("$%.2f", newPrice));
     }
 
-    private void addProductToCart(){
+    private void addProductToCart(View v){
         /*- Request para leer Tag
           - Leer saldo del tag
           - Checar si tiene saldo suficiente
           - Realizar el pago (descontar saldo del tag), en caso de no tener saldo suficiente solicitar recarga
 
         */
-        CanchaFirebase x = new CanchaFirebase();
+        Intent intent = new Intent(MainActivity.this,PagoActivity.class);
+        startActivity(intent);
+
         EditText nombreVato = findViewById(R.id.computer_name);
         EditText matriculaVato = findViewById(R.id.computer_ram);
         EditText tipoCancha = findViewById(R.id.cancha);
@@ -560,11 +567,16 @@ public class MainActivity extends AppCompatActivity
         String fMatricula = matriculaVato.getText().toString();
         String fCancha = tipoCancha.getText().toString();
         String fHoraI = horaIngreso.getText().toString();
-
         int quantity = Integer.parseInt(textProductQuantityCounter.getText().toString()) + 1;
 
+        nombreP = fName;
+        matriculaP = fMatricula;
+        canchaP = fCancha;
+        horaIP = fHoraI;
+        horasP= quantity;
+        /*CanchaFirebase x = new CanchaFirebase();
         x.cargaDato(fName,fMatricula,fCancha, fHoraI,quantity);
-        Toast.makeText(this, "Registro completo", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Registro completo", Toast.LENGTH_LONG).show();*/
     }
 
     public void onClick (View view) {
